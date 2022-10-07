@@ -23,7 +23,7 @@
             <span>Past Orders</span>
           </a>
         </nav>
-        <a href="#" class="top-bar-cart-link">
+        <a @click="toggleSidebar" class="top-bar-cart-link">
           <i class="icofont-cart-alt icofont-1x"></i>
           <span>Cart (0)</span>
         </a>
@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <main class="wrapper">
+      <main class="wrapper" >
 
         <h2>Recommended</h2>
 
@@ -60,8 +60,8 @@
                   <div class="cell">
                     <label>Price:</label>
                   </div>
-                  <div class="cell">
-                    $4.82
+                  <div  class="cell">
+                    ${{ cart.carrot_price }}
                   </div>
                 </div>
                 <div class="row">
@@ -69,13 +69,13 @@
                     <label>Quantity:</label>
                   </div>
                   <div class="cell">
-                    <input type="number" v-model.number="inventory.carrots">
+                    <input type="number" v-model.number="inventory.Carrots">
                   </div>
                 </div>
               </form>
             </div>
             <div class="card-footer">
-              <button @click="addToCart('carrots')" class="btn btn-light">
+              <button @click="addToCart('Carrots')" class="btn btn-light">
                 Add to cart
               </button>
             </div>
@@ -100,8 +100,8 @@
                   <div class="cell">
                     <label>Price:</label>
                   </div>
-                  <div class="cell">
-                    $1.62
+                  <div  class="cell">
+                    ${{ cart.pineapple_price }}
                   </div>
                 </div>
                 <div class="row">
@@ -109,13 +109,13 @@
                     <label>Quantity:</label>
                   </div>
                   <div class="cell">
-                    <input type="number" v-model.number="inventory.pineapples">
+                    <input type="number" v-model.number="inventory.Pineapples">
                   </div>
                 </div>
               </form>
             </div>
             <div class="card-footer">
-              <button @click="addToCart('pineapples')" class="btn btn-light">Add to cart</button>
+              <button @click="addToCart('Pineapples')" class="btn btn-light">Add to cart</button>
             </div>
           </div>
 
@@ -139,7 +139,7 @@
                     <label>Price:</label>
                   </div>
                   <div class="cell">
-                    $1.04
+                    ${{ cart.cherry_price }}
                   </div>
                 </div>
                 <div class="row">
@@ -147,19 +147,25 @@
                     <label>Quantity:</label>
                   </div>
                   <div class="cell">
-                    <input type="number" v-model.number="inventory.cherries">
+                    <input type="number" v-model.number="inventory.Cherries">
                   </div>
                 </div>
               </form>
             </div>
             <div class="card-footer">
-              <button @click="addToCart('cherries')" class="btn btn-light">Add to cart</button>
+              <button @click="addToCart('Cherries')" class="btn btn-light">Add to cart</button>
             </div>
           </div>
 
         </div>
 
       </main>
+
+      <sidebar 
+        :toggle="toggleSidebar" 
+        v-if="showSidebar" 
+        :cart = "cart"
+      /> 
 
       <footer>
       </footer>
@@ -168,36 +174,5 @@
       
     <script src="https://unpkg.com/vue@next"></script>
     <script src="./app.js"></script>
-    <script>
-      /*
-
-      this section is for the js that came with the project 
-
-      let app = Vue.createApp({
-        data() {
-          return {
-            inventory: {
-              carrots: 0,
-              pineapples: 0,
-              cherries: 0
-            },
-            cart: {
-              carrots: 0,
-              pineapples: 0,
-              cherries: 0
-            }
-          }
-        },
-        methods: {
-          addToCart(type) {
-            this.cart[type] += this.inventory[type]
-            console.log(this.cart)
-          }
-        }
-      })
-
-      app.mount('#app')
-      */
-    </script>
   </body>
 </html>
