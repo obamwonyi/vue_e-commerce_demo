@@ -41,19 +41,25 @@
 
         <div class="recommended">
 
-          <div class="card">
+          <!--- this is an item with the card -->
+          <div 
+          v-for="(product,i) in inventory_two.slice(0,3)"
+          :key = "product.id"
+
+          class="card"
+          >
             <div class="card-title">
-              Carrots
+              {{ product.name }}
             </div>
             <div class="card-body">
-              <i class="icofont-10x icofont-carrot"></i>
+              <i class="icofont-10x icofont-{{ product.icon }}"></i>
               <form>
                 <div class="row">
                   <div class="cell">
                     <label>Type:</label>
                   </div>
                   <div class="cell">
-                    <em>Vegetable</em>
+                    <em>{{ product.type }}</em>
                   </div>
                 </div>
                 <div class="row">
@@ -61,7 +67,7 @@
                     <label>Price:</label>
                   </div>
                   <div  class="cell">
-                    ${{ cart.carrot_price }}
+                    ${{ product.price.USD }}
                   </div>
                 </div>
                 <div class="row">
@@ -69,93 +75,18 @@
                     <label>Quantity:</label>
                   </div>
                   <div class="cell">
-                    <input type="number" v-model.number="inventory.Carrots">
+                    <input type="number" v-model.number="product.quantity">
                   </div>
                 </div>
               </form>
             </div>
             <div class="card-footer">
-              <button @click="addToCart('Carrots')" class="btn btn-light">
+              <button @click="addToCart(product.name,i)" class="btn btn-light">
                 Add to cart
               </button>
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-title">
-              Pineapples
-            </div>
-            <div class="card-body">
-              <i class="icofont-10x icofont-pineapple"></i>
-              <form>
-                <div class="row">
-                  <div class="cell">
-                    <label>Type:</label>
-                  </div>
-                  <div class="cell">
-                    <em>Fruit</em>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="cell">
-                    <label>Price:</label>
-                  </div>
-                  <div  class="cell">
-                    ${{ cart.pineapple_price }}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="cell">
-                    <label>Quantity:</label>
-                  </div>
-                  <div class="cell">
-                    <input type="number" v-model.number="inventory.Pineapples">
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="card-footer">
-              <button @click="addToCart('Pineapples')" class="btn btn-light">Add to cart</button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-title">
-              Cherries
-            </div>
-            <div class="card-body">
-              <i class="icofont-10x icofont-cherry"></i>
-              <form>
-                <div class="row">
-                  <div class="cell">
-                    <label>Type:</label>
-                  </div>
-                  <div class="cell">
-                    <em>Fruit</em>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="cell">
-                    <label>Price:</label>
-                  </div>
-                  <div class="cell">
-                    ${{ cart.cherry_price }}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="cell">
-                    <label>Quantity:</label>
-                  </div>
-                  <div class="cell">
-                    <input type="number" v-model.number="inventory.Cherries">
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div class="card-footer">
-              <button @click="addToCart('Cherries')" class="btn btn-light">Add to cart</button>
-            </div>
-          </div>
 
         </div>
 

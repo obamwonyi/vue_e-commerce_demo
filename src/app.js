@@ -11,15 +11,12 @@ let app = Vue.createApp(
                     Pineapples:0, 
                     Cherries:0
                 },
+                inventory_two:[],
                 cart:
                 {
                     Carrots:0, 
                     Pineapples:0,
                     Cherries:0,
-                    type:"",
-                    carrot_price: 4.82,
-                    pineapple_price:1.62,
-                    cherry_price:1.04
                 },
 
 
@@ -28,16 +25,25 @@ let app = Vue.createApp(
 
         methods:
         {
-            addToCart(type)
+            addToCart(name,index)
             {
-                this.cart[type]= this.inventory[type];
-                this.cart.type = type;
+                if(!this.cart[name]) this.cart[name] = 0;
+                this.cart[name] += this.inventory_two[index].quantity;
                 this.showSidebar = true;
+                console.log(this.inventory_two[index]);
+
             }, 
             toggleSidebar()
             {
                 this.showSidebar = !this.showSidebar;
-            }
+
+            },
+        },
+        async mounted()
+        {
+            const res = await fetch('./food.json');
+            const data = await res.json();
+            this.inventory_two = data;
         }
     }
 );
@@ -86,6 +92,8 @@ app.component("sidebar",
             </div>
         </aside>
     `,
+
+
 
     
 
@@ -180,7 +188,8 @@ app.component("item",
 
             return multiple;
         }
-    }
+    },
+
 })
 
 app.mount("#app");
