@@ -14,12 +14,20 @@ let app = Vue.createApp(
                 inventory_two:[],
                 cart:
                 {
-                    Carrots:0, 
-                    Pineapples:0,
-                    Cherries:0,
+
                 },
 
 
+            }
+        },
+
+        computed:{
+            totalQuantity()
+            {
+                return Object.values(this.cart).reduce((acc,curr) => 
+                {
+                    return acc + curr
+                },0)
             }
         },
 
@@ -29,21 +37,25 @@ let app = Vue.createApp(
             {
                 if(!this.cart[name]) this.cart[name] = 0;
                 this.cart[name] += this.inventory_two[index].quantity;
+                this.inventory_two[index].quantity = 0;
                 this.showSidebar = true;
-                console.log(this.inventory_two[index]);
-
             }, 
             toggleSidebar()
             {
                 this.showSidebar = !this.showSidebar;
 
             },
+            removeItem(name)
+            {
+                delete this.cart[name];
+            }
         },
         async mounted()
         {
             const res = await fetch('./food.json');
             const data = await res.json();
             this.inventory_two = data;
+            console.log(this.cart);
         }
     }
 );
@@ -51,7 +63,28 @@ let app = Vue.createApp(
 app.component("sidebar",
 {
     //i passed carts to this component so I can also fetch it as a prop from the other component 
-    props:["toggle","cart"],
+    props:["toggle","cart", "inventory_two","remove"],
+    methods:{
+        getPrice(name)
+        {
+            const product = this.inventory_two.find((p) => 
+            {
+                return p.name === name
+            })
+
+            return product.price.USD
+        },
+
+        calculateTotal()
+        {
+            //fetching all the value in the cart object as 
+            //an array 
+            const total = Object.entries (this.cart).reduce((acc,curr, index) => {
+                return acc + (curr[1] * this.getPrice(curr[0]))
+            },0)
+            return total.toFixed(2);
+        }
+    },
     template:`
         <aside class="cart-container">
             <div class="cart">
@@ -76,16 +109,29 @@ app.component("sidebar",
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- this is the dynamic version of the code. -->
 
-                        <item  :cart="cart" />
+                        <tr 
+                            v-for="(quantity, key, i) in cart" 
+                            :key="i"
+                        >
+                            <td><i class="icofont-carrot icofont-3x"></i></td>
+                                <td>{{ key }}</td>
+                                <td>\${{ getPrice(key) }}</td>
+                                <td class="center">{{ quantity }}</td>
+                                <td>{{ (quantity * getPrice(key)).toFixed(2) }}</td>
+                                <td class="center">
+                                    <button @click="remove(key)"  class="btn btn-light cart-remove">
+                                        &times;
+                                    </button>
+                            </td>
+                        </tr>
 
                     </tbody>
                     </table>
 
-                    <p class="center"><em>No items in cart</em></p>
+                    <p v-if="!Object.keys(cart).length" class="center"><em>No items in cart</em></p>
                     <div class="spread">
-                    <span><strong>Total:</strong>$1.00</span>
+                    <span><strong>Total:</strong> {{ calculateTotal() }}</span>
                     <button class="btn btn-light">Checkout</button>
                     </div>
                 </div>
@@ -93,104 +139,9 @@ app.component("sidebar",
         </aside>
     `,
 
-
-
-    
-
 });
 
 
-app.component("item", 
-{
-    props:["cart"],
-    template:`
-        <tr>
-            <td><i class="icofont-carrot icofont-3x"></i></td>
-                <td>{{ item }}</td>
-                <td>{{ item_price }}</td>
-                <td class="center">{{ item_unit }}</td>
-                <td>{{ item_price_total }}</td>
-                <td class="center">
-                    <button class="btn btn-light cart-remove">
-                    &times;
-                    </button>
-            </td>
-        </tr>
-    `,
-    data:function()
-    {
-        return {
-            item: this.cart.type,
-            //calling the fetchedItemPrice() in our methods: property 
-            item_price:this.fetchItemPrice(this.cart.type),
-            //calling the fetchItemUnit() method from the methods: property
-            item_unit:this.fetchItemUnit(this.cart.type),
-            //calling the sum total 
-            item_price_total: this.fetchedItemTotal(this.cart.type)
-
-        }
-    },
-    methods:{
-        fetchItemPrice(item)
-        {
-            if(item === "Carrots")
-            {
-                return this.cart.carrot_price;
-            }
-            else if(item === "Pineapples")
-            {
-                return this.cart.pineapple_price;
-            }
-            else
-            {
-                return this.cart.cherry_price;
-            }
-        }, 
-        fetchItemUnit(item)
-        {
-            if(item === "Carrots")
-            {
-                return this.cart.Carrots;
-            }
-            else if(item === "Pineapples")
-            {
-                return this.cart.Pineapples;
-            }
-            else
-            {
-                return this.cart.Cherries;
-            }
-        },
-
-
-        fetchedItemTotal(item)
-        {
-            if(item === "Carrots")
-            {
-                return this.multiplyValues(this.cart.carrot_price,this.cart.Carrots) ;
-            }
-            else if(item === "Pineapples")
-            {
-                return this.multiplyValues(this.cart.pineapple_price,this.cart.Pineapples) ;
-            }
-            else
-            {
-                return this.multiplyValues(this.cart.cherry_price,this.cart.Cherries) ;
-            }
-        },
-
-        multiplyValues(price,quantity)
-        {
-            price = parseFloat(price);
-            quantity= parseFloat(quantity);
-
-            multiple = (price * quantity).toFixed(2);
-
-            return multiple;
-        }
-    },
-
-})
 
 app.mount("#app");
 

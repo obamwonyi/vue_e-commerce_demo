@@ -25,7 +25,7 @@
         </nav>
         <a @click="toggleSidebar" class="top-bar-cart-link">
           <i class="icofont-cart-alt icofont-1x"></i>
-          <span>Cart (0)</span>
+          <span> Cart ({{ totalQuantity }})</span>
         </a>
       </header>
 
@@ -96,6 +96,8 @@
         :toggle="toggleSidebar" 
         v-if="showSidebar" 
         :cart = "cart"
+        :inventory_two = "inventory_two"
+        :remove="removeItem"
       /> 
 
       <footer>
